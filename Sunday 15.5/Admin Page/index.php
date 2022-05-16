@@ -1,6 +1,19 @@
 <?php
 session_start();
+include_once "../Sign Up Page/connection.php";
 
+if(isset($_POST["delete"])){
+    $id= $_POST["id"];
+    $deletingdata= "DELETE FROM users_data WHERE id=$id;";
+    mysqli_query($conn , $deletingdata);
+}
+
+if(isset($_POST["updatename"])){
+    $idid= $_POST["idid"];
+    $newname= $_POST["newname"];
+    $query= "UPDATE users_data SET username='$newname' WHERE id=$idid;";
+    $x= mysqli_query($conn , $query);
+}
 ?>
 
 <!DOCTYPE html>
@@ -79,24 +92,57 @@ session_start();
             <th>Last Login Date</th>
         </tr>
         <?php
-        $id= 1;
-        foreach ($_SESSION["usersData"] as $value) {
-            if($value["admin"] == true){
-                continue;
-            }
+        // $id= 1;
+        // foreach ($_SESSION["usersData"] as $value) {
+        //     if($value["admin"] == true){
+        //         continue;
+        //     }
+        //     echo "<tr>
+        //             <td>".$id."</td>
+        //             <td>".$value["name"]."</td>
+        //             <td>".$value["email"]."</td>
+        //             <td>".$value["password"]."</td>
+        //             <td>".$value["Creation_Date"]."</td>
+        //             <td>".$value["Last-Login-Date"]."</td>
+        //         </tr>";
+        //     $id++;
+        // }
+        $stat = "SELECT * FROM users_data;";
+        $result = mysqli_query($conn,$stat);
+        $resultcheck = mysqli_num_rows($result);
+        if($resultcheck > 0)
+        {
+        while($value = mysqli_fetch_assoc($result))
+        {
             echo "<tr>
-                    <td>".$id."</td>
-                    <td>".$value["name"]."</td>
-                    <td>".$value["email"]."</td>
-                    <td>".$value["password"]."</td>
-                    <td>".$value["Creation_Date"]."</td>
-                    <td>".$value["Last-Login-Date"]."</td>
-                </tr>";
-            $id++;
+                     <td>".$value['id']."</td>
+                     <td>".$value["username"]."</td>
+                     <td>".$value["email"]."</td>
+                     <td>".$value["passwordd"]."</td>
+                     <td>".$value["created_at"]."</td>
+                     
+                 </tr>";
+        }
         }
         ?>
     </table>
+
+    <form action="" method="post">
+    <label>Enter the id</label>
+    <input type="number" name="id">
+    <input type="submit" name="delete" value="delete">
+    </form>
+
+    <form action="" method="post">
+    <label>Enter the id</label>
+    <input type="number" name="idid">
+    <label>Enter the new name</label>
+    <input type="text" name="newname">
+    <input type="submit" name="updatename" value="update name">
+    </form>
+
     <a id="logouta" href="../index.html">Log Out</a>
 </div>
 </body>
 </html>
+<!-- <td>".$value["Last-Login-Date"]."</td> -->

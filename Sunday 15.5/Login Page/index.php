@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // print_r($_SESSION["usersData"]);
 include_once "../Sign Up Page/connection.php";
 
@@ -26,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     while($row = mysqli_fetch_assoc($result))
     {
         if($row["email"] == $LoginEmail &&  $row["passwordd"] == $LoginPassword){
-            $user_email= $row["email"];
-            $user_mobile= $row["mobile"];
-            $user_name= $row["username"];
+            $_SESSION["userEmail"]= $row["email"];
+            $_SESSION["userName"]= $row["username"];
+            $_SESSION["userMobile"]= $row["mobile"];
 
             header('Location: ../Welcome Page/index.php');
         }else{
@@ -37,7 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     }
-    // if($LoginEmail == )
+    if($LoginEmail == 'sara@gmail.com'){
+        header('Location: ../Admin Page/index.php');
+    }
 
         // foreach ($_SESSION["usersData"] as $key => $value) {
         //     if($LoginEmail == $value["email"] && $LoginPassword == $value["password"] && $value["admin"] == true){

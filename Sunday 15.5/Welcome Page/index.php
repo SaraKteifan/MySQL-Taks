@@ -1,6 +1,6 @@
 <?php
 include_once "../Sign Up Page/connection.php";
-
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -92,11 +92,11 @@ include_once "../Sign Up Page/connection.php";
             <h1>Welcome!</h1>
             <p id="welcomeP">Hello there! We are extremely happy to have you with us and hope you to have a great experience throughout your time here, Enjoy!</p>
         
-            <p>Full Name: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$user_name 
+            <p>Full Name: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$_SESSION["userName"] 
             ."</span>"; ?></p>
-            <p>Email: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$user_email 
+            <p>Email: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$_SESSION["userEmail"] 
             ."</span>"; ?></p>
-            <p>Mobile: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$user_mobile 
+            <p>Mobile: <?php echo "<span style='color:#F54E4E; font-weight: bold;'>" .$_SESSION["userMobile"]
             ."</span>"; ?></p>
             </div>
             <a id="logouta" href="../index.html">Log Out</a>
