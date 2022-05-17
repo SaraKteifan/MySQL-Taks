@@ -89,21 +89,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     else{
-        // $Cration_Date= date("d-m-Y");
-        // $arr= ["email"=> $signUpEmail, "mobile"=>$mobile, "name"=> $fullName, "password"=>$SignUpPassword, "birthDate"=> $birthDate, "admin"=>false, "Creation_Date"=>$Cration_Date, "Last-Login-Date" =>"haven't login yet"];
-        
-        $sql= " INSERT INTO users_data (email, mobile , username, passwordd, birth_date)
-        VALUES ('$signUpEmail','$mobile','$fullName', '$SignUpPassword', '$birthDate'); ";
+        $isadmin= 0;
+        if($signUpEmail == "sara@gmail.com") $isadmin= 1;
+
+        $sql= " INSERT INTO users_data (email, mobile , username, passwordd, birth_date, adminn, last_login)
+        VALUES ('$signUpEmail','$mobile','$fullName', '$SignUpPassword', '$birthDate', '$isadmin', ''); ";
 
         if(mysqli_query($conn , $sql)){
         echo 'new record created sucessfuly ';
         }else{
         echo "error:".$sql."<br>".mysqli_error($conn);
         }
- 
+        
         mysqli_close($conn);
-        // if($signUpEmail == "sara@gmail.com") $arr["admin"]= true;
-        // array_push($_SESSION["usersData"],$arr);
+
         header('Location: ../Login Page/index.php');
     }
 

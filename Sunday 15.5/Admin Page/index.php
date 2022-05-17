@@ -2,18 +2,38 @@
 session_start();
 include_once "../Sign Up Page/connection.php";
 
-if(isset($_POST["delete"])){
-    $id= $_POST["id"];
+$display='none';
+if(isset($_POST["deleteuser"])){
+    $id= $_POST["userid"];
     $deletingdata= "DELETE FROM users_data WHERE id=$id;";
     mysqli_query($conn , $deletingdata);
 }
 
-if(isset($_POST["updatename"])){
-    $idid= $_POST["idid"];
-    $newname= $_POST["newname"];
-    $query= "UPDATE users_data SET username='$newname' WHERE id=$idid;";
-    $x= mysqli_query($conn , $query);
+if(isset($_POST["edituser"])){
+    $id= $_POST["userid"];
+    $stat = "SELECT * FROM users_data WHERE id='$id';";
+    $result = mysqli_query($conn,$stat);
+    $resultcheck = mysqli_num_rows($result);
+    if($resultcheck > 0)
+    {
+        while($row = mysqli_fetch_assoc($result))
+        {$newName= $row["username"];
+            $newEmail= $row["email"];
+            $newPassword= $row["passwordd"];
+            $display= 'block';
+        }
+    }
 }
+if(isset($_POST["newuser"])){
+    $newname= $_POST['newName'];
+    $newPassword= $_POST['newPassword'];
+    $newEmail= $_POST['newEmail'];
+    $id= $_POST['userid'];
+    $query= "UPDATE users_data SET username='$newname', passwordd='$newPassword',email='$newEmail' WHERE id=$id;";
+    $x= mysqli_query($conn , $query);
+    $display= 'none';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -90,59 +110,58 @@ if(isset($_POST["updatename"])){
             <th>Password</th>
             <th>Account Cration Date</th>
             <th>Last Login Date</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
         <?php
-        // $id= 1;
-        // foreach ($_SESSION["usersData"] as $value) {
-        //     if($value["admin"] == true){
-        //         continue;
-        //     }
-        //     echo "<tr>
-        //             <td>".$id."</td>
-        //             <td>".$value["name"]."</td>
-        //             <td>".$value["email"]."</td>
-        //             <td>".$value["password"]."</td>
-        //             <td>".$value["Creation_Date"]."</td>
-        //             <td>".$value["Last-Login-Date"]."</td>
-        //         </tr>";
-        //     $id++;
-        // }
+    
         $stat = "SELECT * FROM users_data;";
         $result = mysqli_query($conn,$stat);
         $resultcheck = mysqli_num_rows($result);
         if($resultcheck > 0)
         {
-        while($value = mysqli_fetch_assoc($result))
+        while($row = mysqli_fetch_assoc($result))
         {
+            $y= $row['id'];
             echo "<tr>
-                     <td>".$value['id']."</td>
-                     <td>".$value["username"]."</td>
-                     <td>".$value["email"]."</td>
-                     <td>".$value["passwordd"]."</td>
-                     <td>".$value["created_at"]."</td>
-                     
+                    <td>".$row['id']."</td>
+                    <td>".$row["username"]."</td>
+                    <td>".$row["email"]."</td>
+                    <td>".$row["passwordd"]."</td>
+                    <td>".$row["created_at"]."</td>
+                    <td>".$row["last_login"]."</td>
+                    <td>".
+                    "<form method='post'>
+                    <input type='hidden' value='".$y."' name='userid'>
+                    <input type='submit' value='Edit' name='edituser'>
+                    </form>
+                    "."</td>
+                    <td>".
+                    "<form method='post'>
+                    <input type='hidden' value='".$y."' name='userid'>
+                    <input type='submit' value='Delete' name='deleteuser'>
+                    </form>
+                    "."</td>
                  </tr>";
         }
         }
         ?>
     </table>
 
-    <form action="" method="post">
-    <label>Enter the id</label>
-    <input type="number" name="id">
-    <input type="submit" name="delete" value="delete">
-    </form>
+    <div id="editdiv" style="display: <?php echo $display ?>;">
+        <form method="post">
+            <input type="hidden" value="<?php echo $id ?>" name="userid">
+            <label>Name:</label>
+            <input type="text" value="<?php echo $newName ?>" name="newName">
+            <label>Email:</label>
+            <input type="text" value="<?php echo $newEmail ?>" name="newEmail">
+            <label>Password:</label>
+            <input type="text" value="<?php echo $newPassword ?>" name="newPassword">
+            <input type='submit' value='Edit' name='newuser'>
+    </div>
 
-    <form action="" method="post">
-    <label>Enter the id</label>
-    <input type="number" name="idid">
-    <label>Enter the new name</label>
-    <input type="text" name="newname">
-    <input type="submit" name="updatename" value="update name">
-    </form>
 
     <a id="logouta" href="../index.html">Log Out</a>
 </div>
 </body>
 </html>
-<!-- <td>".$value["Last-Login-Date"]."</td> -->

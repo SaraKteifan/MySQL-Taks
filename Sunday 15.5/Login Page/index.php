@@ -1,6 +1,5 @@
 <?php
 session_start();
-// print_r($_SESSION["usersData"]);
 include_once "../Sign Up Page/connection.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -16,47 +15,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         echo $LoginPasswordReq;
     }else{
 
-
-
     $stat = "SELECT * FROM users_data;";
     $result = mysqli_query($conn,$stat);
     $resultcheck = mysqli_num_rows($result);
+    $counter=1;
     if($resultcheck > 0)
     {
     while($row = mysqli_fetch_assoc($result))
     {
+        
         if($row["email"] == $LoginEmail &&  $row["passwordd"] == $LoginPassword){
             $_SESSION["userEmail"]= $row["email"];
             $_SESSION["userName"]= $row["username"];
             $_SESSION["userMobile"]= $row["mobile"];
-
-            header('Location: ../Welcome Page/index.php');
+            $last_login = date("Y-m-d  h:i:s");
+            $id= $row["id"];
+            $query= "UPDATE users_data SET last_login='$last_login' WHERE id=$id;";
+            $x= mysqli_query($conn , $query);
+            if($row["adminn"] == '1'){
+                header('Location: ../Admin Page/index.php');
+            }else{
+                header('Location: ../Welcome Page/index.php');
+            }
         }else{
-            echo "<span style='color: red;'> The Email or password is wrong </span>";
-            break;
+            if($counter == $resultcheck){
+                echo "<span style='color: red;'> The Email or password is wrong </span>";
+            }else{
+                $counter++;
+            }
         }
     }
     }
-    if($LoginEmail == 'sara@gmail.com'){
-        header('Location: ../Admin Page/index.php');
-    }
-
-        // foreach ($_SESSION["usersData"] as $key => $value) {
-        //     if($LoginEmail == $value["email"] && $LoginPassword == $value["password"] && $value["admin"] == true){
-        //         header('Location: ../Admin Page/index.php');
-        //     }
-        //     if($LoginEmail == $value["email"] && $LoginPassword == $value["password"] && $value["admin"] == false){
-        //         $_SESSION["userEmail"]= $value["email"];
-        //         $_SESSION["userName"]= $value["name"];
-        //         $_SESSION["userMobile"]= $value["mobile"];
-        //         $_SESSION["usersData"][$key]["Last-Login-Date"]= date("d-m-Y - h:i:sa");
-        //         $_SESSION["usersData"];
-        //         header('Location: ../Welcome Page/index.php');
-        //     }else if($LoginEmail == $value["email"] && $LoginPassword != $value["password"]){
-        //         echo "<span style='color: red;'> The Email or password is wrong </span>";
-        //         break;
-        //     }
-        // }
     }
 
 
